@@ -10,12 +10,11 @@ class UniversityGUI:
 
         # Create frames
         self.top_frame = tkinter.Frame(self.main_window)
+        self.mid_frame = tkinter.Frame(self.main_window)
         self.bottom_frame = tkinter.Frame(self.main_window)
 
         # Create variable to use with the Radio buttons
         self.rb_var = tkinter.IntVar()
-        self.value1 = tkinter.StringVar()
-        self.value2 = tkinter.StringVar()
 
         # Set the variable to 0
         self.rb_var.set(0)
@@ -46,7 +45,6 @@ class UniversityGUI:
 
         # Pack the frames
         self.top_frame.pack()
-        # self.mid_frame.pack()
         self.bottom_frame.pack()
 
         # Enter the tkinter main loop
@@ -54,60 +52,69 @@ class UniversityGUI:
 
     # Define the clear function
     def clear(self):
-        # Set the variables to 0
-        self.rb_var.set(0)
+        self.mid_frame.destroy()
         self.bottom_frame.destroy()
 
     def create_instructor_frame(self):
-        self.submit_button = tkinter.Button(self.bottom_frame,
+
+        self.value = tkinter.StringVar()
+        self.submit_button = tkinter.Button(self.mid_frame,
                                             text='Submit', command=self.search_instructor)
-        self.instructor_label = tkinter.Label(self.bottom_frame,
+        self.instructor_label = tkinter.Label(self.mid_frame,
                                               text='Enter instructor ID:')
-        self.instructor_entry = tkinter.Entry(self.bottom_frame, width=10)
+        self.instructor_entry = tkinter.Entry(self.mid_frame, width=10)
 
         self.instructor_info = tkinter.Label(self.bottom_frame,
-                                             textvariable=self.value1, justify="left")
+                                             textvariable=self.value, justify="left", anchor='w')
 
         self.instructor_label.pack(side='left')
         self.instructor_entry.pack(side='left')
         self.submit_button.pack(side='left')
-        self.instructor_info.pack(anchor='w')
+        self.instructor_info.pack(side='left')
 
-        self.bottom_frame.pack()
+        self.mid_frame.pack(anchor='w')
+        self.bottom_frame.pack(anchor='w')
 
         self.instructor_entry.bind('<Return>', self.search_instructor)
 
-
     def create_dept_frame(self):
-        self.submit_button = tkinter.Button(self.bottom_frame,
+        self.value = tkinter.StringVar()
+        self.submit_button = tkinter.Button(self.mid_frame,
                                             text='Submit', command=self.search_dept)
-        self.dept_label = tkinter.Label(self.bottom_frame,
+        self.dept_label = tkinter.Label(self.mid_frame,
                                         text='Enter department name:')
-        self.dept_entry = tkinter.Entry(self.bottom_frame, width=10)
+        self.dept_entry = tkinter.Entry(self.mid_frame, width=10)
 
         self.dept_info = tkinter.Label(self.bottom_frame,
-                                       textvariable=self.value2)
+                                       textvariable=self.value, anchor='w')
 
         self.dept_label.pack(side='left')
         self.dept_entry.pack(side='left')
         self.submit_button.pack(side='left')
-        self.dept_info.pack(side='left', anchor='w')
+        self.dept_info.pack(side='left')
 
-        self.bottom_frame.pack()
+        self.mid_frame.pack(anchor='w')
+        self.bottom_frame.pack(anchor='w')
 
         self.dept_entry.bind('<Return>', self.search_dept)
-
 
     def radio_button_selected(self):
         # Get the value of the selected radio button.
         if self.rb_var.get() == 1:
+            self.mid_frame.destroy()
             self.bottom_frame.destroy()
+            self.mid_frame = tkinter.Frame(self.main_window)
             self.bottom_frame = tkinter.Frame(self.main_window)
             self.create_instructor_frame()
-        elif self.rb_var.get() == 2:
+        if self.rb_var.get() == 2:
+            self.mid_frame.destroy()
             self.bottom_frame.destroy()
+            self.mid_frame = tkinter.Frame(self.main_window)
             self.bottom_frame = tkinter.Frame(self.main_window)
             self.create_dept_frame()
+        if self.rb_var.get() == 3:
+            self.clear()
+
 
     def search_instructor(self, event=None):
         #
@@ -126,7 +133,7 @@ class UniversityGUI:
                 int_line = int_file.readline()
 
             if not found:
-                self.value1.set('Information not found')
+                self.value.set('Information not found')
                 return
 
             while dept_line != '':
@@ -135,7 +142,7 @@ class UniversityGUI:
                 if dept == key:
                     building = dept_line[1]
                 dept_line = dept_file.readline()
-        self.value1.set(f'Name: {name}\n Department: {dept}\n Building: {building}')
+        self.value.set(f'Name: {name}\nDepartment: {dept}\nBuilding: {building}')
 
     def search_dept(self, event=None):
 
@@ -153,11 +160,10 @@ class UniversityGUI:
                     found = True
                 dept_line = dept_file.readline()
             if not found:
-                self.value2.set('Information not found')
+                self.value.set('Information not found')
                 return
             else:
-                self.value2.set(f'Building: {building}\n Budget: {budget}')
-        # self.dept_info.destroy()
+                self.value.set(f'Building: {building}\nBudget: {budget}')
 
 
 # Create an instance of AutoGUI
