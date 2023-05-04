@@ -5,7 +5,7 @@ class UniversityGUI:
     def __init__(self):
         # Create the main window
         self.main_window = tkinter.Tk()
-        self.main_window.geometry("400x150")
+        self.main_window.geometry("425x150")
         self.main_window.title('University Information System')
 
         # Create frames
